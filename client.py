@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.Qt import QUrl, QDesktopServices
 import sys
-
+import webbrowser
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -59,6 +59,8 @@ class MainWindow(QWidget):
                 self.label2.setText("Answer %s" % (info))
                 self.label2.adjustSize()
                 self.show()
+                affCarte = self.__map(hostname,ip,apiKey)
+                
 
     def __query(self, hostname):
         url = "http://%s" % (hostname)
@@ -74,6 +76,15 @@ class MainWindow(QWidget):
         if r.status_code == requests.codes.NOT_FOUND:
             QMessageBox.about(self, "Error", "IP not found")
         if r.status_code == requests.codes.OK:
+            return r.json()
+
+    def __map(self,latitude,longitude):
+        url = "https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=12" % (latitude,longitude)
+        r = requests.get(url)
+        if r.status_code == requests.codes.NOT_FOUND:
+            QMessageBox.about(self, "Error", "location not found")
+        if r.status_code == requests.codes.OK:
+            webbrowser.open(url)
             return r.json()
 
 
