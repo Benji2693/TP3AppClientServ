@@ -56,10 +56,12 @@ class MainWindow(QWidget):
                 #self.label2.adjustSize()
                 #self.show()
             if info:
+                lat=str(info["Latitude"])
+                long=str(info["Longitude"])
                 self.label2.setText("Answer %s" % (info))
                 self.label2.adjustSize()
                 self.show()
-                affCarte = self.__map(hostname,ip,apiKey)
+                webbrowser.open( url = "https://www.openstreetmap.org/?mlat="+lat+"&mlon="+long+"#map=12",new =0 )
                 
 
     def __query(self, hostname):
@@ -76,15 +78,6 @@ class MainWindow(QWidget):
         if r.status_code == requests.codes.NOT_FOUND:
             QMessageBox.about(self, "Error", "IP not found")
         if r.status_code == requests.codes.OK:
-            return r.json()
-
-    def __map(self,latitude,longitude):
-        url = "https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=12" % (latitude,longitude)
-        r = requests.get(url)
-        if r.status_code == requests.codes.NOT_FOUND:
-            QMessageBox.about(self, "Error", "location not found")
-        if r.status_code == requests.codes.OK:
-            webbrowser.open(url)
             return r.json()
 
 
